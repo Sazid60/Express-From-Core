@@ -42,9 +42,24 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
   console.log(req.url, req.method, req.hostname);
   next()
 }
-// app.get('/',logger, (req: Request, res: Response) => {
+// app.get('/',logger, async (req: Request, res: Response) => {
 //   res.send('Hello Devvus!')
 // })
+
+// error handling
+app.get('/', logger, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.send(something)
+  } catch (error) {
+    // next diye global error handler er kase pathaye dilam
+    next(error)
+    // console.log(error);
+    // res.status(400).json({
+    //   success: false,
+    //   message: "Failed To Get Data "
+    // })
+  }
+})
 
 // understanding params
 app.get('/:userId', (req: Request, res: Response) => {
@@ -76,4 +91,22 @@ app.post('/', (req: Request, res: Response) => {
   })
 })
 
-export default app
+// custom error
+app.all("*", (req: Request, res: Response) =>{
+  res.status(400).json({
+    success : false,
+    message:"Route Not Found"
+  })
+})
+// global error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(error);
+  if(error){
+    res.status(400).json({
+      success : false,
+      message:"Something went wrong"
+    })
+  }
+})
+
+export default app 

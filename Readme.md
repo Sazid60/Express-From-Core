@@ -185,4 +185,86 @@ courseRouter.post("/create-course", (req: Request, res: Response) => {
 
 export default app
 ```
--These helps to create different different modular routes
+- These helps to create different different modular routes
+
+
+### 7-10 Express error handling
+- Handling Regular Error 
+```js
+
+import express, { NextFunction, Request, Response } from 'express'
+const app = express()
+
+// to get parsed data we have to use parser
+app.use(express.json())
+app.use(express.text())
+
+const logger = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.url, req.method, req.hostname);
+  next()
+}
+
+// error handling
+app.get('/',logger, async (req: Request, res: Response) => {
+  try{
+    res.send(something)
+  }catch(error) {
+    console.log(error);
+    res.status(400).json({
+      success :false,
+      message: "Failed To Get Data "
+    })
+  }
+})
+
+
+export default app
+```
+
+- If we want to make the error handler global error handler 
+
+```js
+import express, { NextFunction, Request, Response } from 'express'
+const app = express()
+
+// to get parsed data we have to use parser
+app.use(express.json())
+app.use(express.text())
+
+const logger = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.url, req.method, req.hostname);
+  next()
+}
+
+// error handling
+app.get('/',logger, async (req: Request, res: Response) => {
+  try{
+    res.send(something)
+  }catch(error) {
+    console.log(error);
+    res.status(400).json({
+      success :false,
+      message: "Failed To Get Data "
+    })
+  }
+})
+
+// custom error
+app.all("*", (req: Request, res: Response) =>{
+  res.status(400).json({
+    success : false,
+    message:"Route Not Found"
+  })
+})
+// global error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(error);
+  if(error){
+    res.status(400).json({
+      success : false,
+      message:"Something went wrong"
+    })
+  }
+})
+export default app
+```
