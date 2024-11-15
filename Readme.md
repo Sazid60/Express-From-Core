@@ -237,15 +237,18 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
 }
 
 // error handling
-app.get('/',logger, async (req: Request, res: Response) => {
-  try{
+
+app.get('/', logger, async (req: Request, res: Response, next: NextFunction) => {
+  try {
     res.send(something)
-  }catch(error) {
-    console.log(error);
-    res.status(400).json({
-      success :false,
-      message: "Failed To Get Data "
-    })
+  } catch (error) {
+    // next diye global error handler er kase pathaye dilam
+    next(error)
+    // console.log(error);
+    // res.status(400).json({
+    //   success: false,
+    //   message: "Failed To Get Data "
+    // })
   }
 })
 
