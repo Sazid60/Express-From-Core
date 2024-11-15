@@ -139,3 +139,50 @@ app.get('/',logger, (req: Request, res: Response) => {
 
 export default app
 ```
+### 7-9 Routing in express.js
+- For large scale projects we have to use router. we will not put everything in one file. express.router()
+
+```js
+// const express = require('express')
+
+// we will use import here 
+import express, { NextFunction, Request, Response } from 'express'
+const app = express()
+
+// to get parsed data we have to use parser
+app.use(express.json())
+app.use(express.text())
+
+// creating a router
+const userRouter = express.Router();
+const courseRouter = express.Router();
+
+
+app.use('/api/v1/users', userRouter)
+app.use('/api/v1/courses', courseRouter)
+
+userRouter.get(`/create-user`, (req: Request, res: Response) => {
+  const user = req.body;
+  console.log(user);
+
+  res.json({
+    success: true,
+    message: "User is created successfully",
+    data: user,
+  })
+})
+
+// postman hit http://localhost:5000/api/v1/courses/create-course
+courseRouter.post("/create-course", (req: Request, res: Response) => {
+  const course = req.body;
+  console.log(course);
+  res.json({
+    success: true,
+    message: "Course is created successfully",
+    data: course,
+  })
+})
+
+export default app
+```
+-These helps to create different different modular routes
