@@ -66,6 +66,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello Devvus!')
 })
 
+
 app.post('/', (req : Request,res :Response) =>{
   // body theke parse kore dehaite hobe so parser use korte hobe
   console.log(req.body);
@@ -75,6 +76,65 @@ app.post('/', (req : Request,res :Response) =>{
   res.json({
     message: "Data Received"
   })
+})
+
+export default app
+```
+
+### 7-8 Middleware in express.js
+- Those whose works are reparative will have to be done by middleware
+- when we have dynamic data  and we have to search by id we will use 
+```js
+
+// postman request http://localhost:5000/56/
+// app.ts
+app.get('/:userId', (req: Request, res: Response) => {
+  console.log(req.params);
+  console.log(req.params.userId);
+  res.send('Hello!')
+})
+
+// postman request http://localhost:5000/56/
+// app.ts
+app.get('/:userId/:subId', (req: Request, res: Response) => {
+  console.log(req.params);
+  console.log(req.params.userId);
+  res.send('Hello!')
+})
+```
+- I we have to search based on any query we have to use query
+```js
+// postman route req http://localhost:5000?email=sazid@gmail.com&name=sazid
+
+app.get('/', (req: Request, res: Response) => {
+  console.log(req.query);
+  console.log(req.query.name);
+  res.send('Hello!')
+})
+
+```
+
+#### what is middleware?
+- It works between request and response
+- Takes client request and do some works and sends to next middleware. Woks are passed to next middleware using next() function. at final stage it goes to controller where exist the call back function which sends user response.
+
+```js
+// const express = require('express')
+
+// we will use import here 
+import express, { NextFunction, Request, Response } from 'express'
+const app = express()
+
+// to get parsed data we have to use parser
+app.use(express.json())
+app.use(express.text())
+
+const logger = (req :Request, res:Response, next :NextFunction) =>{
+  console.log(req.url, req.method, req.hostname);
+  next()
+}
+app.get('/',logger, (req: Request, res: Response) => {
+  res.send('Hello Devvus!')
 })
 
 export default app
