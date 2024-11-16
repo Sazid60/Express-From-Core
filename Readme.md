@@ -48,6 +48,10 @@ bootStrap()
 - node dist/app/server.js write in command to run the server
 - for each change we have to repeat these . but to automate this we have to write in cmd tsc-w 
 - to re run node server automatically we have to use nodemon npm i -D nodemon
+-   "scripts": {
+    "start:dev": "nodemon ./dist/app/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }, set this in package.json
 - Re run server npm run start:dev in command
 - copy the server url and hit in postman
 
